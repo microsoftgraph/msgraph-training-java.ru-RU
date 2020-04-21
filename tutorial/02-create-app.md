@@ -1,115 +1,103 @@
 ---
-ms.openlocfilehash: 298c78d0626e16899de402b3e9b537c8b8386886
-ms.sourcegitcommit: 2af94da662c454e765b32edeb9406812e3732406
+ms.openlocfilehash: 381e4166f07e1dbc51c072645f17002e43f6cc16
+ms.sourcegitcommit: 189f87d879c57b11992e7bc75580b4c69e014122
 ms.translationtype: MT
 ms.contentlocale: ru-RU
-ms.lasthandoff: 12/13/2019
-ms.locfileid: "40018843"
+ms.lasthandoff: 04/21/2020
+ms.locfileid: "43612021"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
-Откройте интерфейс командной строки (CLI) в каталоге, в котором нужно создать проект. Выполните следующую команду, чтобы создать новый проект Мавен.
+В этом разделе показано, как создать базовое консольное приложение Java.
 
-```Shell
-mvn archetype:generate -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeGroupId=org.apache.maven.archetypes -DgroupId=com.contoso -DartifactId=graphtutorial -Dversion=1.0-SNAPSHOT
-```
+1. Откройте интерфейс командной строки (CLI) в каталоге, в котором нужно создать проект. Выполните следующую команду, чтобы создать новый проект Gradle.
 
-> [!IMPORTANT]
-> Можно ввести разные значения для идентификатора группы (`DgroupId` параметра) и идентификатора артефакта (`DartifactId` параметра), чем указано выше. В примере кода в этом руководстве предполагается, что используется `com.contoso` идентификатор группы. Если вы используете другое значение, не забудьте заменить `com.contoso` в любом образце кода идентификатором вашей группы.
+    ```Shell
+    gradle init --dsl groovy --test-framework junit --type java-application --project-name graphtutorial --package graphtutorial
+    ```
 
-При появлении соответствующего запроса подтвердите конфигурацию и дождитесь создания проекта. После создания проекта убедитесь, что он работает, выполнив следующие команды для упаковки и запуска приложения в утилите CLI.
+1. После создания проекта убедитесь, что он работает, выполнив приведенную ниже команду, чтобы запустить приложение в утилите CLI.
 
-```Shell
-mvn package
-java -cp target/graphtutorial-1.0-SNAPSHOT.jar com.contoso.App
-```
+    ```Shell
+    ./gradlew --console plain run
+    ```
 
-Если это сработает, приложение должно выводить `Hello World!`результаты. Перед перемещением добавьте дополнительные зависимости, которые будут использоваться позже.
+    Если это сработает, приложение должно выводить `Hello World.`результаты.
+
+## <a name="install-dependencies"></a>Установка зависимостей
+
+Перед перемещением добавьте дополнительные зависимости, которые будут использоваться позже.
 
 - [Библиотека проверки подлинности Microsoft (MSAL) для Java](https://github.com/AzureAD/microsoft-authentication-library-for-java) для проверки подлинности пользователя и получения маркеров доступа.
 - [Пакет SDK Microsoft Graph для Java](https://github.com/microsoftgraph/msgraph-sdk-java) , чтобы совершать вызовы в Microsoft Graph.
 - [Привязка НОП SLF4J](https://mvnrepository.com/artifact/org.slf4j/slf4j-nop) для отмены ведения журнала из MSAL.
 
-Открыть **./графтуториал/пом.ксмл**. Добавьте следующий `<dependencies>` элемент в элемент.
+1. Открыть **./буилд.градле**. Обновите `dependencies` раздел, чтобы добавить эти зависимости.
 
-```xml
-<dependency>
-  <groupId>org.slf4j</groupId>
-  <artifactId>slf4j-nop</artifactId>
-  <version>1.8.0-beta4</version>
-</dependency>
+    :::code language="gradle" source="../demo/graphtutorial/build.gradle" id="DependenciesSnippet" highlight="7-9":::
 
-<dependency>
-  <groupId>com.microsoft.graph</groupId>
-  <artifactId>microsoft-graph</artifactId>
-  <version>1.6.0</version>
-</dependency>
+1. Добавьте следующий элемент в конец файла **./буилд.градле**.
 
-<dependency>
-  <groupId>com.microsoft.azure</groupId>
-  <artifactId>msal4j</artifactId>
-  <version>1.1.0</version>
-</dependency>
-```
+    :::code language="gradle" source="../demo/graphtutorial/build.gradle" id="StandardInputSnippet":::
 
-В следующий раз при построении проекта Мавен загрузит эти зависимости.
+В следующий раз при построении проекта Gradle загрузит эти зависимости.
 
 ## <a name="design-the-app"></a>Проектирование приложения
 
-Откройте файл **./графтуториал/СРК/Маин/Жава/ком/Контосо/АПП.Жава** и замените его содержимое на приведенный ниже код.
+1. Откройте файл **./СРК/Маин/Жава/графтуториал/АПП.Жава** и замените его содержимое на приведенный ниже код.
 
-```java
-package com.contoso;
+    ```java
+    package graphtutorial;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
+    import java.util.InputMismatchException;
+    import java.util.Scanner;
 
-/**
- * Graph Tutorial
- *
- */
-public class App {
-    public static void main(String[] args) {
-        System.out.println("Java Graph Tutorial");
-        System.out.println();
+    /**
+     * Graph Tutorial
+     *
+     */
+    public class App {
+        public static void main(String[] args) {
+            System.out.println("Java Graph Tutorial");
+            System.out.println();
 
-        Scanner input = new Scanner(System.in);
+            Scanner input = new Scanner(System.in);
 
-        int choice = -1;
+            int choice = -1;
 
-        while (choice != 0) {
-            System.out.println("Please choose one of the following options:");
-            System.out.println("0. Exit");
-            System.out.println("1. Display access token");
-            System.out.println("2. List calendar events");
+            while (choice != 0) {
+                System.out.println("Please choose one of the following options:");
+                System.out.println("0. Exit");
+                System.out.println("1. Display access token");
+                System.out.println("2. List calendar events");
 
-            try {
-                choice = input.nextInt();
-            } catch (InputMismatchException ex) {
-                // Skip over non-integer input
-                input.nextLine();
+                try {
+                    choice = input.nextInt();
+                } catch (InputMismatchException ex) {
+                    // Skip over non-integer input
+                    input.nextLine();
+                }
+
+                // Process user choice
+                switch(choice) {
+                    case 0:
+                        // Exit the program
+                        System.out.println("Goodbye...");
+                        break;
+                    case 1:
+                        // Display access token
+                        break;
+                    case 2:
+                        // List the calendar
+                        break;
+                    default:
+                        System.out.println("Invalid choice");
+                }
             }
 
-            // Process user choice
-            switch(choice) {
-                case 0:
-                    // Exit the program
-                    System.out.println("Goodbye...");
-                    break;
-                case 1:
-                    // Display access token
-                    break;
-                case 2:
-                    // List the calendar
-                    break;
-                default:
-                    System.out.println("Invalid choice");
-            }
+            input.close();
         }
-
-        input.close();
     }
-}
-```
+    ```
 
-В результате будет реализовано базовое меню, в котором считывается выбор пользователя из командной строки.
+    В результате будет реализовано базовое меню, в котором считывается выбор пользователя из командной строки.

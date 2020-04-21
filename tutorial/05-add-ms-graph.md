@@ -1,10 +1,10 @@
 ---
-ms.openlocfilehash: 3fb56d613dbaa56474c9af58ebdd0b157c53bf1a
-ms.sourcegitcommit: 2af94da662c454e765b32edeb9406812e3732406
+ms.openlocfilehash: 93688a97872ad640c12c7137f4cc09ede4a98416
+ms.sourcegitcommit: 189f87d879c57b11992e7bc75580b4c69e014122
 ms.translationtype: MT
 ms.contentlocale: ru-RU
-ms.lasthandoff: 12/13/2019
-ms.locfileid: "40018845"
+ms.lasthandoff: 04/21/2020
+ms.locfileid: "43612070"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
@@ -12,133 +12,93 @@ ms.locfileid: "40018845"
 
 ## <a name="implement-an-authentication-provider"></a>Реализация поставщика проверки подлинности
 
-Для работы с пакетом SDK Microsoft Graph для Java требуется `IAuthenticationProvider` реализация интерфейса для создания экземпляра `GraphServiceClient` объекта. Сначала создайте простой класс, чтобы добавить маркер доступа к исходящим запросам. Создайте новый файл в каталоге **./графтуториал/СРК/Маин/Жава/ком/Контосо** с именем **симплеауспровидер. Java** и добавьте следующий код.
+Для работы с пакетом SDK Microsoft Graph для Java требуется `IAuthenticationProvider` реализация интерфейса для создания экземпляра `GraphServiceClient` объекта.
 
-```java
-package com.contoso;
+1. Создайте новый файл в каталоге **./графтуториал/СРК/Маин/Жава/графтуториал** с именем **симплеауспровидер. Java** и добавьте следующий код.
 
-import com.microsoft.graph.authentication.IAuthenticationProvider;
-import com.microsoft.graph.http.IHttpRequest;
-
-/**
- * SimpleAuthProvider
- */
-public class SimpleAuthProvider implements IAuthenticationProvider {
-
-    private String accessToken = null;
-
-    public SimpleAuthProvider(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    @Override
-    public void authenticateRequest(IHttpRequest request) {
-        // Add the access token in the Authorization header
-        request.addHeader("Authorization", "Bearer " + accessToken);
-    }
-}
-```
+    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/SimpleAuthProvider.java" id="AuthProviderSnippet":::
 
 ## <a name="get-user-details"></a>Получение сведений о пользователе
 
-Сначала добавьте новый класс, содержащий все функциональные возможности Graph. Создайте новый файл в каталоге **./графтуториал/СРК/Маин/Жава/ком/Контосо** с именем **Graph. Java** и добавьте следующий код.
+1. Создайте новый файл в каталоге **./графтуториал/СРК/Маин/Жава/графтуториал** с именем **Graph. Java** и добавьте следующий код.
 
-```java
-package com.contoso;
+    ```java
+    package graphtutorial;
 
-import com.microsoft.graph.logger.DefaultLogger;
-import com.microsoft.graph.logger.LoggerLevel;
-import com.microsoft.graph.models.extensions.IGraphServiceClient;
-import com.microsoft.graph.models.extensions.User;
-import com.microsoft.graph.requests.extensions.GraphServiceClient;
-import java.util.LinkedList;
-import java.util.List;import com.microsoft.graph.models.extensions.Event;import com.microsoft.graph.options.Option;
-import com.microsoft.graph.options.QueryOption;
-/**
- * Graph
- */
-public class Graph {
+    import java.util.LinkedList;
+    import java.util.List;
 
-    private static IGraphServiceClient graphClient = null;
-    private static SimpleAuthProvider authProvider = null;
+    import com.microsoft.graph.logger.DefaultLogger;
+    import com.microsoft.graph.logger.LoggerLevel;
+    import com.microsoft.graph.models.extensions.Event;
+    import com.microsoft.graph.models.extensions.IGraphServiceClient;
+    import com.microsoft.graph.models.extensions.User;
+    import com.microsoft.graph.options.Option;
+    import com.microsoft.graph.options.QueryOption;
+    import com.microsoft.graph.requests.extensions.GraphServiceClient;
+    import com.microsoft.graph.requests.extensions.IEventCollectionPage;
 
-    private static void ensureGraphClient(String accessToken) {
-        if (graphClient == null) {
-            // Create the auth provider
-            authProvider = new SimpleAuthProvider(accessToken);
+    /**
+     * Graph
+     */
+    public class Graph {
 
-            // Create default logger to only log errors
-            DefaultLogger logger = new DefaultLogger();
-            logger.setLoggingLevel(LoggerLevel.ERROR);
+        private static IGraphServiceClient graphClient = null;
+        private static SimpleAuthProvider authProvider = null;
 
-            // Build a Graph client
-            graphClient = GraphServiceClient.builder()
-                .authenticationProvider(authProvider)
-                .logger(logger)
-                .buildClient();
+        private static void ensureGraphClient(String accessToken) {
+            if (graphClient == null) {
+                // Create the auth provider
+                authProvider = new SimpleAuthProvider(accessToken);
+
+                // Create default logger to only log errors
+                DefaultLogger logger = new DefaultLogger();
+                logger.setLoggingLevel(LoggerLevel.ERROR);
+
+                // Build a Graph client
+                graphClient = GraphServiceClient.builder()
+                    .authenticationProvider(authProvider)
+                    .logger(logger)
+                    .buildClient();
+            }
+        }
+
+        public static User getUser(String accessToken) {
+            ensureGraphClient(accessToken);
+
+            // GET /me to get authenticated user
+            User me = graphClient
+                .me()
+                .buildRequest()
+                .get();
+
+            return me;
         }
     }
+    ```
 
-    public static User getUser(String accessToken) {
-        ensureGraphClient(accessToken);
+1. Добавьте следующий `import` оператор в начало **app. Java**.
 
-        // GET /me to get authenticated user
-        User me = graphClient
-            .me()
-            .buildRequest()
-            .get();
+    ```java
+    import com.microsoft.graph.models.extensions.User;
+    ```
 
-        return me;
-    }
-}
-```
+1. Добавьте следующий код в файл **app. Java** непосредственно перед `Scanner input = new Scanner(System.in);` строкой, чтобы получить пользователя и вывести отображаемое имя пользователя.
 
-Добавьте следующий код в файл **app. Java** непосредственно перед `Scanner input = new Scanner(System.in);` строкой, чтобы получить пользователя и вывести отображаемое имя пользователя.
+    ```java
+    // Greet the user
+    User user = Graph.getUser(accessToken);
+    System.out.println("Welcome " + user.displayName);
+    System.out.println();
+    ```
 
-```java
-// Greet the user
-User user = Graph.getUser(accessToken);
-System.out.println("Welcome " + user.displayName);
-System.out.println();
-```
-
-Если вы запустите приложение сейчас, после входа в приложение введите имя.
+1. Запустите приложение. После входа в приложение зайдите по имени.
 
 ## <a name="get-calendar-events-from-outlook"></a>Получение событий календаря из Outlook
 
-Добавьте указанные ниже `import` операторы в **Graph. Java**.
+1. Добавьте указанную ниже функцию в `Graph` класс в **Graph. Java** , чтобы получить события из календаря пользователя.
 
-```java
-import java.util.LinkedList;
-import java.util.List;
-import com.microsoft.graph.models.extensions.Event;
-import com.microsoft.graph.options.Option;
-import com.microsoft.graph.options.QueryOption;
-import com.microsoft.graph.requests.extensions.IEventCollectionPage;
-```
-
-Добавьте указанную ниже функцию в `Graph` класс в **Graph. Java** , чтобы получить события из календаря пользователя.
-
-```java
-public static List<Event> getEvents(String accessToken) {
-    ensureGraphClient(accessToken);
-
-    // Use QueryOption to specify the $orderby query parameter
-    final List<Option> options = new LinkedList<Option>();
-    // Sort results by createdDateTime, get newest first
-    options.add(new QueryOption("orderby", "createdDateTime DESC"));
-
-    // GET /me/events
-    IEventCollectionPage eventPage = graphClient
-        .me()
-        .events()
-        .buildRequest(options)
-        .select("subject,organizer,start,end")
-        .get();
-
-    return eventPage.getCurrentPage();
-}
-```
+    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/Graph.java" id="GetEventsSnippet":::
 
 Рассмотрите, что делает этот код.
 
@@ -148,80 +108,60 @@ public static List<Event> getEvents(String accessToken) {
 
 ## <a name="display-the-results"></a>Отображение результатов
 
-Для начала добавьте следующие `import` операторы в **app. Java**.
+1. Добавьте следующие `import` операторы в **app. Java**.
 
-```java
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.List;
-```
+    ```java
+    import java.time.LocalDateTime;
+    import java.time.format.DateTimeFormatter;
+    import java.time.format.FormatStyle;
+    import java.util.List;
+    import com.microsoft.graph.models.extensions.DateTimeTimeZone;
+    import com.microsoft.graph.models.extensions.Event;
+    ```
 
-Затем добавьте указанную ниже функцию в `App` класс, чтобы отформатировать свойства [DateTimeTimeZone](/graph/api/resources/datetimetimezone?view=graph-rest-1.0) из Microsoft Graph в понятный для пользователя формат.
+1. Добавьте указанную ниже функцию в `App` класс, чтобы отформатировать свойства [DateTimeTimeZone](/graph/api/resources/datetimetimezone?view=graph-rest-1.0) из Microsoft Graph в понятный для пользователя формат.
 
-```java
-private static String formatDateTimeTimeZone(DateTimeTimeZone date) {
-    LocalDateTime dateTime = LocalDateTime.parse(date.dateTime);
+    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/App.java" id="FormatDateSnippet":::
 
-    return dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)) + " (" + date.timeZone + ")";
-}
-```
+1. Добавьте указанную ниже функцию в `App` класс, чтобы получить события пользователя и вывести их на консоль.
 
-Затем добавьте приведенную ниже функцию в `App` класс, чтобы получить события пользователя и вывести их на консоль.
+    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/App.java" id="ListEventsSnippet":::
 
-```java
-private static void listCalendarEvents(String accessToken) {
-    // Get the user's events
-    List<Event> events = Graph.getEvents(accessToken);
+1. Добавьте следующий код сразу после `// List the calendar` комментария в `main` функции.
 
-    System.out.println("Events:");
+    ```java
+    listCalendarEvents(accessToken);
+    ```
 
-    for (Event event : events) {
-        System.out.println("Subject: " + event.subject);
-        System.out.println("  Organizer: " + event.organizer.emailAddress.name);
-        System.out.println("  Start: " + formatDateTimeTimeZone(event.start));
-        System.out.println("  End: " + formatDateTimeTimeZone(event.end));
-    }
+1. Сохраните все изменения, создайте приложение и запустите его. Выберите параметр **список событий календаря** , чтобы просмотреть список событий пользователя.
 
-    System.out.println();
-}
-```
+    ```Shell
+    Welcome Adele Vance
 
-Наконец, добавьте следующий код сразу после `// List the calendar` комментария в `main` функции.
-
-```java
-listCalendarEvents(accessToken);
-```
-
-Сохраните все изменения и запустите приложение. Выберите параметр **список событий календаря** , чтобы просмотреть список событий пользователя.
-
-```Shell
-Welcome Adele Vance
-
-Please choose one of the following options:
-0. Exit
-1. Display access token
-2. List calendar events
-2
-Events:
-Subject: Team meeting
-  Organizer: Adele Vance
-  Start: 5/22/19, 3:00 PM (UTC)
-  End: 5/22/19, 4:00 PM (UTC)
-Subject: Team Lunch
-  Organizer: Adele Vance
-  Start: 5/24/19, 6:30 PM (UTC)
-  End: 5/24/19, 8:00 PM (UTC)
-Subject: Flight to Redmond
-  Organizer: Adele Vance
-  Start: 5/26/19, 4:30 PM (UTC)
-  End: 5/26/19, 7:00 PM (UTC)
-Subject: Let's meet to discuss strategy
-  Organizer: Patti Fernandez
-  Start: 5/27/19, 10:00 PM (UTC)
-  End: 5/27/19, 10:30 PM (UTC)
-Subject: All-hands meeting
-  Organizer: Adele Vance
-  Start: 5/28/19, 3:30 PM (UTC)
-  End: 5/28/19, 5:00 PM (UTC)
-```
+    Please choose one of the following options:
+    0. Exit
+    1. Display access token
+    2. List calendar events
+    2
+    Events:
+    Subject: Team meeting
+      Organizer: Adele Vance
+      Start: 5/22/19, 3:00 PM (UTC)
+      End: 5/22/19, 4:00 PM (UTC)
+    Subject: Team Lunch
+      Organizer: Adele Vance
+      Start: 5/24/19, 6:30 PM (UTC)
+      End: 5/24/19, 8:00 PM (UTC)
+    Subject: Flight to Redmond
+      Organizer: Adele Vance
+      Start: 5/26/19, 4:30 PM (UTC)
+      End: 5/26/19, 7:00 PM (UTC)
+    Subject: Let's meet to discuss strategy
+      Organizer: Patti Fernandez
+      Start: 5/27/19, 10:00 PM (UTC)
+      End: 5/27/19, 10:30 PM (UTC)
+    Subject: All-hands meeting
+      Organizer: Adele Vance
+      Start: 5/28/19, 3:30 PM (UTC)
+      End: 5/28/19, 5:00 PM (UTC)
+    ```
