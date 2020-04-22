@@ -1,227 +1,167 @@
 ---
-ms.openlocfilehash: 3fb56d613dbaa56474c9af58ebdd0b157c53bf1a
-ms.sourcegitcommit: 2af94da662c454e765b32edeb9406812e3732406
+ms.openlocfilehash: 93688a97872ad640c12c7137f4cc09ede4a98416
+ms.sourcegitcommit: 189f87d879c57b11992e7bc75580b4c69e014122
 ms.translationtype: MT
 ms.contentlocale: ru-RU
-ms.lasthandoff: 12/13/2019
-ms.locfileid: "40018845"
+ms.lasthandoff: 04/21/2020
+ms.locfileid: "43612070"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
-<span data-ttu-id="3508f-101">В этом упражнении вы добавите Microsoft Graph в приложение.</span><span class="sxs-lookup"><span data-stu-id="3508f-101">In this exercise you will incorporate the Microsoft Graph into the application.</span></span> <span data-ttu-id="3508f-102">Для этого приложения вы будете использовать [пакет SDK Microsoft Graph для Java](https://github.com/microsoftgraph/msgraph-sdk-java) , чтобы совершать вызовы в Microsoft Graph.</span><span class="sxs-lookup"><span data-stu-id="3508f-102">For this application, you will use the [Microsoft Graph SDK for Java](https://github.com/microsoftgraph/msgraph-sdk-java) to make calls to Microsoft Graph.</span></span>
+<span data-ttu-id="33bc4-101">В этом упражнении вы добавите Microsoft Graph в приложение.</span><span class="sxs-lookup"><span data-stu-id="33bc4-101">In this exercise you will incorporate the Microsoft Graph into the application.</span></span> <span data-ttu-id="33bc4-102">Для этого приложения вы будете использовать [пакет SDK Microsoft Graph для Java](https://github.com/microsoftgraph/msgraph-sdk-java) , чтобы совершать вызовы в Microsoft Graph.</span><span class="sxs-lookup"><span data-stu-id="33bc4-102">For this application, you will use the [Microsoft Graph SDK for Java](https://github.com/microsoftgraph/msgraph-sdk-java) to make calls to Microsoft Graph.</span></span>
 
-## <a name="implement-an-authentication-provider"></a><span data-ttu-id="3508f-103">Реализация поставщика проверки подлинности</span><span class="sxs-lookup"><span data-stu-id="3508f-103">Implement an authentication provider</span></span>
+## <a name="implement-an-authentication-provider"></a><span data-ttu-id="33bc4-103">Реализация поставщика проверки подлинности</span><span class="sxs-lookup"><span data-stu-id="33bc4-103">Implement an authentication provider</span></span>
 
-<span data-ttu-id="3508f-104">Для работы с пакетом SDK Microsoft Graph для Java требуется `IAuthenticationProvider` реализация интерфейса для создания экземпляра `GraphServiceClient` объекта.</span><span class="sxs-lookup"><span data-stu-id="3508f-104">The Microsoft Graph SDK for Java requires an implementation of the `IAuthenticationProvider` interface to instantiate its `GraphServiceClient` object.</span></span> <span data-ttu-id="3508f-105">Сначала создайте простой класс, чтобы добавить маркер доступа к исходящим запросам.</span><span class="sxs-lookup"><span data-stu-id="3508f-105">Start by creating a simple class to add the access token to outgoing requests.</span></span> <span data-ttu-id="3508f-106">Создайте новый файл в каталоге **./графтуториал/СРК/Маин/Жава/ком/Контосо** с именем **симплеауспровидер. Java** и добавьте следующий код.</span><span class="sxs-lookup"><span data-stu-id="3508f-106">Create a new file in the **./graphtutorial/src/main/java/com/contoso** directory named **SimpleAuthProvider.java** and add the following code.</span></span>
+<span data-ttu-id="33bc4-104">Для работы с пакетом SDK Microsoft Graph для Java требуется `IAuthenticationProvider` реализация интерфейса для создания экземпляра `GraphServiceClient` объекта.</span><span class="sxs-lookup"><span data-stu-id="33bc4-104">The Microsoft Graph SDK for Java requires an implementation of the `IAuthenticationProvider` interface to instantiate its `GraphServiceClient` object.</span></span>
 
-```java
-package com.contoso;
+1. <span data-ttu-id="33bc4-105">Создайте новый файл в каталоге **./графтуториал/СРК/Маин/Жава/графтуториал** с именем **симплеауспровидер. Java** и добавьте следующий код.</span><span class="sxs-lookup"><span data-stu-id="33bc4-105">Create a new file in the **./graphtutorial/src/main/java/graphtutorial** directory named **SimpleAuthProvider.java** and add the following code.</span></span>
 
-import com.microsoft.graph.authentication.IAuthenticationProvider;
-import com.microsoft.graph.http.IHttpRequest;
+    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/SimpleAuthProvider.java" id="AuthProviderSnippet":::
 
-/**
- * SimpleAuthProvider
- */
-public class SimpleAuthProvider implements IAuthenticationProvider {
+## <a name="get-user-details"></a><span data-ttu-id="33bc4-106">Получение сведений о пользователе</span><span class="sxs-lookup"><span data-stu-id="33bc4-106">Get user details</span></span>
 
-    private String accessToken = null;
+1. <span data-ttu-id="33bc4-107">Создайте новый файл в каталоге **./графтуториал/СРК/Маин/Жава/графтуториал** с именем **Graph. Java** и добавьте следующий код.</span><span class="sxs-lookup"><span data-stu-id="33bc4-107">Create a new file in the **./graphtutorial/src/main/java/graphtutorial** directory named **Graph.java** and add the following code.</span></span>
 
-    public SimpleAuthProvider(String accessToken) {
-        this.accessToken = accessToken;
-    }
+    ```java
+    package graphtutorial;
 
-    @Override
-    public void authenticateRequest(IHttpRequest request) {
-        // Add the access token in the Authorization header
-        request.addHeader("Authorization", "Bearer " + accessToken);
-    }
-}
-```
+    import java.util.LinkedList;
+    import java.util.List;
 
-## <a name="get-user-details"></a><span data-ttu-id="3508f-107">Получение сведений о пользователе</span><span class="sxs-lookup"><span data-stu-id="3508f-107">Get user details</span></span>
+    import com.microsoft.graph.logger.DefaultLogger;
+    import com.microsoft.graph.logger.LoggerLevel;
+    import com.microsoft.graph.models.extensions.Event;
+    import com.microsoft.graph.models.extensions.IGraphServiceClient;
+    import com.microsoft.graph.models.extensions.User;
+    import com.microsoft.graph.options.Option;
+    import com.microsoft.graph.options.QueryOption;
+    import com.microsoft.graph.requests.extensions.GraphServiceClient;
+    import com.microsoft.graph.requests.extensions.IEventCollectionPage;
 
-<span data-ttu-id="3508f-108">Сначала добавьте новый класс, содержащий все функциональные возможности Graph.</span><span class="sxs-lookup"><span data-stu-id="3508f-108">First, add a new class to contain all of the Graph functionality.</span></span> <span data-ttu-id="3508f-109">Создайте новый файл в каталоге **./графтуториал/СРК/Маин/Жава/ком/Контосо** с именем **Graph. Java** и добавьте следующий код.</span><span class="sxs-lookup"><span data-stu-id="3508f-109">Create a new file in the **./graphtutorial/src/main/java/com/contoso** directory named **Graph.java** and add the following code.</span></span>
+    /**
+     * Graph
+     */
+    public class Graph {
 
-```java
-package com.contoso;
+        private static IGraphServiceClient graphClient = null;
+        private static SimpleAuthProvider authProvider = null;
 
-import com.microsoft.graph.logger.DefaultLogger;
-import com.microsoft.graph.logger.LoggerLevel;
-import com.microsoft.graph.models.extensions.IGraphServiceClient;
-import com.microsoft.graph.models.extensions.User;
-import com.microsoft.graph.requests.extensions.GraphServiceClient;
-import java.util.LinkedList;
-import java.util.List;import com.microsoft.graph.models.extensions.Event;import com.microsoft.graph.options.Option;
-import com.microsoft.graph.options.QueryOption;
-/**
- * Graph
- */
-public class Graph {
+        private static void ensureGraphClient(String accessToken) {
+            if (graphClient == null) {
+                // Create the auth provider
+                authProvider = new SimpleAuthProvider(accessToken);
 
-    private static IGraphServiceClient graphClient = null;
-    private static SimpleAuthProvider authProvider = null;
+                // Create default logger to only log errors
+                DefaultLogger logger = new DefaultLogger();
+                logger.setLoggingLevel(LoggerLevel.ERROR);
 
-    private static void ensureGraphClient(String accessToken) {
-        if (graphClient == null) {
-            // Create the auth provider
-            authProvider = new SimpleAuthProvider(accessToken);
+                // Build a Graph client
+                graphClient = GraphServiceClient.builder()
+                    .authenticationProvider(authProvider)
+                    .logger(logger)
+                    .buildClient();
+            }
+        }
 
-            // Create default logger to only log errors
-            DefaultLogger logger = new DefaultLogger();
-            logger.setLoggingLevel(LoggerLevel.ERROR);
+        public static User getUser(String accessToken) {
+            ensureGraphClient(accessToken);
 
-            // Build a Graph client
-            graphClient = GraphServiceClient.builder()
-                .authenticationProvider(authProvider)
-                .logger(logger)
-                .buildClient();
+            // GET /me to get authenticated user
+            User me = graphClient
+                .me()
+                .buildRequest()
+                .get();
+
+            return me;
         }
     }
+    ```
 
-    public static User getUser(String accessToken) {
-        ensureGraphClient(accessToken);
+1. <span data-ttu-id="33bc4-108">Добавьте следующий `import` оператор в начало **app. Java**.</span><span class="sxs-lookup"><span data-stu-id="33bc4-108">Add the following `import` statement at the top of **App.java**.</span></span>
 
-        // GET /me to get authenticated user
-        User me = graphClient
-            .me()
-            .buildRequest()
-            .get();
+    ```java
+    import com.microsoft.graph.models.extensions.User;
+    ```
 
-        return me;
-    }
-}
-```
+1. <span data-ttu-id="33bc4-109">Добавьте следующий код в файл **app. Java** непосредственно перед `Scanner input = new Scanner(System.in);` строкой, чтобы получить пользователя и вывести отображаемое имя пользователя.</span><span class="sxs-lookup"><span data-stu-id="33bc4-109">Add the following code in **App.java** just before the `Scanner input = new Scanner(System.in);` line to get the user and output the user's display name.</span></span>
 
-<span data-ttu-id="3508f-110">Добавьте следующий код в файл **app. Java** непосредственно перед `Scanner input = new Scanner(System.in);` строкой, чтобы получить пользователя и вывести отображаемое имя пользователя.</span><span class="sxs-lookup"><span data-stu-id="3508f-110">Add the following code in **App.java** just before the `Scanner input = new Scanner(System.in);` line to get the user and output the user's display name.</span></span>
-
-```java
-// Greet the user
-User user = Graph.getUser(accessToken);
-System.out.println("Welcome " + user.displayName);
-System.out.println();
-```
-
-<span data-ttu-id="3508f-111">Если вы запустите приложение сейчас, после входа в приложение введите имя.</span><span class="sxs-lookup"><span data-stu-id="3508f-111">If you run the app now, after you log in the app welcomes you by name.</span></span>
-
-## <a name="get-calendar-events-from-outlook"></a><span data-ttu-id="3508f-112">Получение событий календаря из Outlook</span><span class="sxs-lookup"><span data-stu-id="3508f-112">Get calendar events from Outlook</span></span>
-
-<span data-ttu-id="3508f-113">Добавьте указанные ниже `import` операторы в **Graph. Java**.</span><span class="sxs-lookup"><span data-stu-id="3508f-113">Add the following `import` statements to **Graph.java**.</span></span>
-
-```java
-import java.util.LinkedList;
-import java.util.List;
-import com.microsoft.graph.models.extensions.Event;
-import com.microsoft.graph.options.Option;
-import com.microsoft.graph.options.QueryOption;
-import com.microsoft.graph.requests.extensions.IEventCollectionPage;
-```
-
-<span data-ttu-id="3508f-114">Добавьте указанную ниже функцию в `Graph` класс в **Graph. Java** , чтобы получить события из календаря пользователя.</span><span class="sxs-lookup"><span data-stu-id="3508f-114">Add the following function to the `Graph` class in **Graph.java** to get events from the user's calendar.</span></span>
-
-```java
-public static List<Event> getEvents(String accessToken) {
-    ensureGraphClient(accessToken);
-
-    // Use QueryOption to specify the $orderby query parameter
-    final List<Option> options = new LinkedList<Option>();
-    // Sort results by createdDateTime, get newest first
-    options.add(new QueryOption("orderby", "createdDateTime DESC"));
-
-    // GET /me/events
-    IEventCollectionPage eventPage = graphClient
-        .me()
-        .events()
-        .buildRequest(options)
-        .select("subject,organizer,start,end")
-        .get();
-
-    return eventPage.getCurrentPage();
-}
-```
-
-<span data-ttu-id="3508f-115">Рассмотрите, что делает этот код.</span><span class="sxs-lookup"><span data-stu-id="3508f-115">Consider what this code is doing.</span></span>
-
-- <span data-ttu-id="3508f-116">URL-адрес, который будет вызываться — это `/me/events`.</span><span class="sxs-lookup"><span data-stu-id="3508f-116">The URL that will be called is `/me/events`.</span></span>
-- <span data-ttu-id="3508f-117">`select` Функция ограничит поля, возвращаемые для каждого события, только теми, которые приложение будет использовать в действительности.</span><span class="sxs-lookup"><span data-stu-id="3508f-117">The `select` function limits the fields returned for each event to just those the app will actually use.</span></span>
-- <span data-ttu-id="3508f-118">A `QueryOption` используется для сортировки результатов по дате и времени создания, начиная с последнего элемента.</span><span class="sxs-lookup"><span data-stu-id="3508f-118">A `QueryOption` is used to sort the results by the date and time they were created, with the most recent item being first.</span></span>
-
-## <a name="display-the-results"></a><span data-ttu-id="3508f-119">Отображение результатов</span><span class="sxs-lookup"><span data-stu-id="3508f-119">Display the results</span></span>
-
-<span data-ttu-id="3508f-120">Для начала добавьте следующие `import` операторы в **app. Java**.</span><span class="sxs-lookup"><span data-stu-id="3508f-120">Start by adding the following `import` statements in **App.java**.</span></span>
-
-```java
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.List;
-```
-
-<span data-ttu-id="3508f-121">Затем добавьте указанную ниже функцию в `App` класс, чтобы отформатировать свойства [DateTimeTimeZone](/graph/api/resources/datetimetimezone?view=graph-rest-1.0) из Microsoft Graph в понятный для пользователя формат.</span><span class="sxs-lookup"><span data-stu-id="3508f-121">Then add the following function to the `App` class to format the [dateTimeTimeZone](/graph/api/resources/datetimetimezone?view=graph-rest-1.0) properties from Microsoft Graph into a user-friendly format.</span></span>
-
-```java
-private static String formatDateTimeTimeZone(DateTimeTimeZone date) {
-    LocalDateTime dateTime = LocalDateTime.parse(date.dateTime);
-
-    return dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)) + " (" + date.timeZone + ")";
-}
-```
-
-<span data-ttu-id="3508f-122">Затем добавьте приведенную ниже функцию в `App` класс, чтобы получить события пользователя и вывести их на консоль.</span><span class="sxs-lookup"><span data-stu-id="3508f-122">Next, add the following function to the `App` class to get the user's events and output them to the console.</span></span>
-
-```java
-private static void listCalendarEvents(String accessToken) {
-    // Get the user's events
-    List<Event> events = Graph.getEvents(accessToken);
-
-    System.out.println("Events:");
-
-    for (Event event : events) {
-        System.out.println("Subject: " + event.subject);
-        System.out.println("  Organizer: " + event.organizer.emailAddress.name);
-        System.out.println("  Start: " + formatDateTimeTimeZone(event.start));
-        System.out.println("  End: " + formatDateTimeTimeZone(event.end));
-    }
-
+    ```java
+    // Greet the user
+    User user = Graph.getUser(accessToken);
+    System.out.println("Welcome " + user.displayName);
     System.out.println();
-}
-```
+    ```
 
-<span data-ttu-id="3508f-123">Наконец, добавьте следующий код сразу после `// List the calendar` комментария в `main` функции.</span><span class="sxs-lookup"><span data-stu-id="3508f-123">Finally, add the following just after the `// List the calendar` comment in the `main` function.</span></span>
+1. <span data-ttu-id="33bc4-110">Запустите приложение.</span><span class="sxs-lookup"><span data-stu-id="33bc4-110">Run the app.</span></span> <span data-ttu-id="33bc4-111">После входа в приложение зайдите по имени.</span><span class="sxs-lookup"><span data-stu-id="33bc4-111">After you log in the app welcomes you by name.</span></span>
 
-```java
-listCalendarEvents(accessToken);
-```
+## <a name="get-calendar-events-from-outlook"></a><span data-ttu-id="33bc4-112">Получение событий календаря из Outlook</span><span class="sxs-lookup"><span data-stu-id="33bc4-112">Get calendar events from Outlook</span></span>
 
-<span data-ttu-id="3508f-124">Сохраните все изменения и запустите приложение.</span><span class="sxs-lookup"><span data-stu-id="3508f-124">Save all of your changes and run the app.</span></span> <span data-ttu-id="3508f-125">Выберите параметр **список событий календаря** , чтобы просмотреть список событий пользователя.</span><span class="sxs-lookup"><span data-stu-id="3508f-125">Choose the **List calendar events** option to see a list of the user's events.</span></span>
+1. <span data-ttu-id="33bc4-113">Добавьте указанную ниже функцию в `Graph` класс в **Graph. Java** , чтобы получить события из календаря пользователя.</span><span class="sxs-lookup"><span data-stu-id="33bc4-113">Add the following function to the `Graph` class in **Graph.java** to get events from the user's calendar.</span></span>
 
-```Shell
-Welcome Adele Vance
+    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/Graph.java" id="GetEventsSnippet":::
 
-Please choose one of the following options:
-0. Exit
-1. Display access token
-2. List calendar events
-2
-Events:
-Subject: Team meeting
-  Organizer: Adele Vance
-  Start: 5/22/19, 3:00 PM (UTC)
-  End: 5/22/19, 4:00 PM (UTC)
-Subject: Team Lunch
-  Organizer: Adele Vance
-  Start: 5/24/19, 6:30 PM (UTC)
-  End: 5/24/19, 8:00 PM (UTC)
-Subject: Flight to Redmond
-  Organizer: Adele Vance
-  Start: 5/26/19, 4:30 PM (UTC)
-  End: 5/26/19, 7:00 PM (UTC)
-Subject: Let's meet to discuss strategy
-  Organizer: Patti Fernandez
-  Start: 5/27/19, 10:00 PM (UTC)
-  End: 5/27/19, 10:30 PM (UTC)
-Subject: All-hands meeting
-  Organizer: Adele Vance
-  Start: 5/28/19, 3:30 PM (UTC)
-  End: 5/28/19, 5:00 PM (UTC)
-```
+<span data-ttu-id="33bc4-114">Рассмотрите, что делает этот код.</span><span class="sxs-lookup"><span data-stu-id="33bc4-114">Consider what this code is doing.</span></span>
+
+- <span data-ttu-id="33bc4-115">URL-адрес, который будет вызываться — это `/me/events`.</span><span class="sxs-lookup"><span data-stu-id="33bc4-115">The URL that will be called is `/me/events`.</span></span>
+- <span data-ttu-id="33bc4-116">`select` Функция ограничит поля, возвращаемые для каждого события, только теми, которые приложение будет использовать в действительности.</span><span class="sxs-lookup"><span data-stu-id="33bc4-116">The `select` function limits the fields returned for each event to just those the app will actually use.</span></span>
+- <span data-ttu-id="33bc4-117">A `QueryOption` используется для сортировки результатов по дате и времени создания, начиная с последнего элемента.</span><span class="sxs-lookup"><span data-stu-id="33bc4-117">A `QueryOption` is used to sort the results by the date and time they were created, with the most recent item being first.</span></span>
+
+## <a name="display-the-results"></a><span data-ttu-id="33bc4-118">Отображение результатов</span><span class="sxs-lookup"><span data-stu-id="33bc4-118">Display the results</span></span>
+
+1. <span data-ttu-id="33bc4-119">Добавьте следующие `import` операторы в **app. Java**.</span><span class="sxs-lookup"><span data-stu-id="33bc4-119">Add the following `import` statements in **App.java**.</span></span>
+
+    ```java
+    import java.time.LocalDateTime;
+    import java.time.format.DateTimeFormatter;
+    import java.time.format.FormatStyle;
+    import java.util.List;
+    import com.microsoft.graph.models.extensions.DateTimeTimeZone;
+    import com.microsoft.graph.models.extensions.Event;
+    ```
+
+1. <span data-ttu-id="33bc4-120">Добавьте указанную ниже функцию в `App` класс, чтобы отформатировать свойства [DateTimeTimeZone](/graph/api/resources/datetimetimezone?view=graph-rest-1.0) из Microsoft Graph в понятный для пользователя формат.</span><span class="sxs-lookup"><span data-stu-id="33bc4-120">Add the following function to the `App` class to format the [dateTimeTimeZone](/graph/api/resources/datetimetimezone?view=graph-rest-1.0) properties from Microsoft Graph into a user-friendly format.</span></span>
+
+    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/App.java" id="FormatDateSnippet":::
+
+1. <span data-ttu-id="33bc4-121">Добавьте указанную ниже функцию в `App` класс, чтобы получить события пользователя и вывести их на консоль.</span><span class="sxs-lookup"><span data-stu-id="33bc4-121">Add the following function to the `App` class to get the user's events and output them to the console.</span></span>
+
+    :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/App.java" id="ListEventsSnippet":::
+
+1. <span data-ttu-id="33bc4-122">Добавьте следующий код сразу после `// List the calendar` комментария в `main` функции.</span><span class="sxs-lookup"><span data-stu-id="33bc4-122">Add the following just after the `// List the calendar` comment in the `main` function.</span></span>
+
+    ```java
+    listCalendarEvents(accessToken);
+    ```
+
+1. <span data-ttu-id="33bc4-123">Сохраните все изменения, создайте приложение и запустите его.</span><span class="sxs-lookup"><span data-stu-id="33bc4-123">Save all of your changes, build the app, then run it.</span></span> <span data-ttu-id="33bc4-124">Выберите параметр **список событий календаря** , чтобы просмотреть список событий пользователя.</span><span class="sxs-lookup"><span data-stu-id="33bc4-124">Choose the **List calendar events** option to see a list of the user's events.</span></span>
+
+    ```Shell
+    Welcome Adele Vance
+
+    Please choose one of the following options:
+    0. Exit
+    1. Display access token
+    2. List calendar events
+    2
+    Events:
+    Subject: Team meeting
+      Organizer: Adele Vance
+      Start: 5/22/19, 3:00 PM (UTC)
+      End: 5/22/19, 4:00 PM (UTC)
+    Subject: Team Lunch
+      Organizer: Adele Vance
+      Start: 5/24/19, 6:30 PM (UTC)
+      End: 5/24/19, 8:00 PM (UTC)
+    Subject: Flight to Redmond
+      Organizer: Adele Vance
+      Start: 5/26/19, 4:30 PM (UTC)
+      End: 5/26/19, 7:00 PM (UTC)
+    Subject: Let's meet to discuss strategy
+      Organizer: Patti Fernandez
+      Start: 5/27/19, 10:00 PM (UTC)
+      End: 5/27/19, 10:30 PM (UTC)
+    Subject: All-hands meeting
+      Organizer: Adele Vance
+      Start: 5/28/19, 3:30 PM (UTC)
+      End: 5/28/19, 5:00 PM (UTC)
+    ```

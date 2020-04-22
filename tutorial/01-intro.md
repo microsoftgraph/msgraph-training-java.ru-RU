@@ -1,25 +1,30 @@
 ---
-ms.openlocfilehash: 3eec5a727d21e481525e2a2892e33a0a30a9bb25
-ms.sourcegitcommit: 2af94da662c454e765b32edeb9406812e3732406
+ms.openlocfilehash: f77f0518aa22d015cf5e915886f8f24a487e7bab
+ms.sourcegitcommit: 189f87d879c57b11992e7bc75580b4c69e014122
 ms.translationtype: MT
 ms.contentlocale: ru-RU
-ms.lasthandoff: 12/13/2019
-ms.locfileid: "40018844"
+ms.lasthandoff: 04/21/2020
+ms.locfileid: "43612077"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
-<span data-ttu-id="417ca-101">В этом руководстве рассказывается, как создать консольное приложение Java, которое использует API Microsoft Graph для получения сведений о календаре для пользователя.</span><span class="sxs-lookup"><span data-stu-id="417ca-101">This tutorial teaches you how to build a Java console app that uses the Microsoft Graph API to retrieve calendar information for a user.</span></span>
+<span data-ttu-id="12d80-101">В этом руководстве рассказывается, как создать консольное приложение Java, которое использует API Microsoft Graph для получения сведений о календаре для пользователя.</span><span class="sxs-lookup"><span data-stu-id="12d80-101">This tutorial teaches you how to build a Java console app that uses the Microsoft Graph API to retrieve calendar information for a user.</span></span>
 
 > [!TIP]
-> <span data-ttu-id="417ca-102">Если вы предпочитаете просто скачать заполненный учебник, вы можете скачать или клонировать [репозиторий GitHub](https://github.com/microsoftgraph/msgraph-training-java).</span><span class="sxs-lookup"><span data-stu-id="417ca-102">If you prefer to just download the completed tutorial, you can download or clone the [GitHub repository](https://github.com/microsoftgraph/msgraph-training-java).</span></span>
+> <span data-ttu-id="12d80-102">Если вы предпочитаете просто скачать заполненный учебник, вы можете скачать или клонировать [репозиторий GitHub](https://github.com/microsoftgraph/msgraph-training-java).</span><span class="sxs-lookup"><span data-stu-id="12d80-102">If you prefer to just download the completed tutorial, you can download or clone the [GitHub repository](https://github.com/microsoftgraph/msgraph-training-java).</span></span>
 
-## <a name="prerequisites"></a><span data-ttu-id="417ca-103">Необходимые компоненты</span><span class="sxs-lookup"><span data-stu-id="417ca-103">Prerequisites</span></span>
+## <a name="prerequisites"></a><span data-ttu-id="12d80-103">Необходимые компоненты</span><span class="sxs-lookup"><span data-stu-id="12d80-103">Prerequisites</span></span>
 
-<span data-ttu-id="417ca-104">Прежде чем приступить к работе с этим руководством, на компьютере для разработки должен быть установлен [набор средств разработки Java SE (ЖДК)](https://java.com/en/download/faq/develop.xml) и [Мавен](https://maven.apache.org/) .</span><span class="sxs-lookup"><span data-stu-id="417ca-104">Before you start this tutorial, you should have the [Java SE Development Kit (JDK)](https://java.com/en/download/faq/develop.xml) and [Maven](https://maven.apache.org/) installed on your development machine.</span></span> <span data-ttu-id="417ca-105">Если у вас нет ЖДК или Мавен, посетите предыдущие ссылки для получения вариантов загрузки.</span><span class="sxs-lookup"><span data-stu-id="417ca-105">If you do not have the JDK or Maven, visit the previous links for download options.</span></span>
+<span data-ttu-id="12d80-104">Прежде чем приступить к работе с этим руководством, на компьютере для разработки должен быть установлен [набор средств разработки Java SE (ЖДК)](https://java.com/en/download/faq/develop.xml) и [Gradle](https://gradle.org/) .</span><span class="sxs-lookup"><span data-stu-id="12d80-104">Before you start this tutorial, you should have the [Java SE Development Kit (JDK)](https://java.com/en/download/faq/develop.xml) and [Gradle](https://gradle.org/) installed on your development machine.</span></span> <span data-ttu-id="12d80-105">Если у вас нет ЖДК или Мавен, посетите предыдущие ссылки для получения вариантов загрузки.</span><span class="sxs-lookup"><span data-stu-id="12d80-105">If you do not have the JDK or Maven, visit the previous links for download options.</span></span>
+
+<span data-ttu-id="12d80-106">Кроме того, у вас также должна быть личная учетная запись Майкрософт с почтовым ящиком на Outlook.com или рабочей или учебной учетной записью Майкрософт.</span><span class="sxs-lookup"><span data-stu-id="12d80-106">You should also have either a personal Microsoft account with a mailbox on Outlook.com, or a Microsoft work or school account.</span></span> <span data-ttu-id="12d80-107">Если у вас нет учетной записи Майкрософт, у вас есть несколько вариантов для получения бесплатной учетной записи:</span><span class="sxs-lookup"><span data-stu-id="12d80-107">If you don't have a Microsoft account, there are a couple of options to get a free account:</span></span>
+
+- <span data-ttu-id="12d80-108">Вы можете [зарегистрироваться для создания новой личной учетной записи Майкрософт](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).</span><span class="sxs-lookup"><span data-stu-id="12d80-108">You can [sign up for a new personal Microsoft account](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).</span></span>
+- <span data-ttu-id="12d80-109">Вы можете [зарегистрироваться в программе для разработчиков office 365](https://developer.microsoft.com/office/dev-program) , чтобы получить бесплатную подписку на Office 365.</span><span class="sxs-lookup"><span data-stu-id="12d80-109">You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.</span></span>
 
 > [!NOTE]
-> <span data-ttu-id="417ca-106">Это руководство было написано с помощью Опенждк версии 12.0.1 и Мавен 3.6.1.</span><span class="sxs-lookup"><span data-stu-id="417ca-106">This tutorial was written with OpenJDK version 12.0.1 and Maven 3.6.1.</span></span> <span data-ttu-id="417ca-107">Действия, описанные в этом руководстве, могут работать с другими версиями, но не тестировались.</span><span class="sxs-lookup"><span data-stu-id="417ca-107">The steps in this guide may work with other versions, but that has not been tested.</span></span>
+> <span data-ttu-id="12d80-110">Это руководство было написано с Опенждк версии 14.0.0.36 и Gradle 6,3.</span><span class="sxs-lookup"><span data-stu-id="12d80-110">This tutorial was written with OpenJDK version 14.0.0.36 and Gradle 6.3.</span></span> <span data-ttu-id="12d80-111">Действия, описанные в этом руководстве, могут работать с другими версиями, но не тестировались.</span><span class="sxs-lookup"><span data-stu-id="12d80-111">The steps in this guide may work with other versions, but that has not been tested.</span></span>
 
-## <a name="feedback"></a><span data-ttu-id="417ca-108">Обратная связь</span><span class="sxs-lookup"><span data-stu-id="417ca-108">Feedback</span></span>
+## <a name="feedback"></a><span data-ttu-id="12d80-112">Отзывы</span><span class="sxs-lookup"><span data-stu-id="12d80-112">Feedback</span></span>
 
-<span data-ttu-id="417ca-109">Сообщите о нем в [репозиторий GitHub](https://github.com/microsoftgraph/msgraph-training-java).</span><span class="sxs-lookup"><span data-stu-id="417ca-109">Please provide any feedback on this tutorial in the [GitHub repository](https://github.com/microsoftgraph/msgraph-training-java).</span></span>
+<span data-ttu-id="12d80-113">Сообщите о нем в [репозиторий GitHub](https://github.com/microsoftgraph/msgraph-training-java).</span><span class="sxs-lookup"><span data-stu-id="12d80-113">Please provide any feedback on this tutorial in the [GitHub repository](https://github.com/microsoftgraph/msgraph-training-java).</span></span>
