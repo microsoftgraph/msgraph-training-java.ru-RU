@@ -1,10 +1,10 @@
 ---
-ms.openlocfilehash: f77f0518aa22d015cf5e915886f8f24a487e7bab
-ms.sourcegitcommit: 189f87d879c57b11992e7bc75580b4c69e014122
+ms.openlocfilehash: f13ee9baa26bb487d5b50bd966e40cee9ba64378
+ms.sourcegitcommit: 22ec2c0e4803b82c9d360f3609f8b15ba5d017ca
 ms.translationtype: MT
 ms.contentlocale: ru-RU
-ms.lasthandoff: 04/21/2020
-ms.locfileid: "43612077"
+ms.lasthandoff: 04/29/2020
+ms.locfileid: "43940478"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
@@ -15,7 +15,7 @@ ms.locfileid: "43612077"
 
 ## <a name="prerequisites"></a>Необходимые компоненты
 
-Прежде чем приступить к работе с этим руководством, на компьютере для разработки должен быть установлен [набор средств разработки Java SE (ЖДК)](https://java.com/en/download/faq/develop.xml) и [Gradle](https://gradle.org/) . Если у вас нет ЖДК или Мавен, посетите предыдущие ссылки для получения вариантов загрузки.
+Прежде чем приступить к работе с этим руководством, на компьютере для разработки должен быть установлен [набор средств разработки Java SE (ЖДК)](https://java.com/en/download/faq/develop.xml) и [Gradle](https://gradle.org/) . Если у вас нет ЖДК или Gradle, посетите предыдущие ссылки для получения вариантов загрузки.
 
 Кроме того, у вас также должна быть личная учетная запись Майкрософт с почтовым ящиком на Outlook.com или рабочей или учебной учетной записью Майкрософт. Если у вас нет учетной записи Майкрософт, у вас есть несколько вариантов для получения бесплатной учетной записи:
 
@@ -25,6 +25,6 @@ ms.locfileid: "43612077"
 > [!NOTE]
 > Это руководство было написано с Опенждк версии 14.0.0.36 и Gradle 6,3. Действия, описанные в этом руководстве, могут работать с другими версиями, но не тестировались.
 
-## <a name="feedback"></a>Отзывы
+## <a name="feedback"></a>Обратная связь
 
 Сообщите о нем в [репозиторий GitHub](https://github.com/microsoftgraph/msgraph-training-java).
