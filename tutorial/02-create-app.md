@@ -1,50 +1,50 @@
 ---
-ms.openlocfilehash: 381e4166f07e1dbc51c072645f17002e43f6cc16
-ms.sourcegitcommit: 189f87d879c57b11992e7bc75580b4c69e014122
+ms.openlocfilehash: 72936993d940cdfb86c864a6ffc543ed466127d1
+ms.sourcegitcommit: eb935a250f8531b04a42710356072b80d46ee3a4
 ms.translationtype: MT
 ms.contentlocale: ru-RU
-ms.lasthandoff: 04/21/2020
-ms.locfileid: "43612021"
+ms.lasthandoff: 12/11/2020
+ms.locfileid: "49661083"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
-В этом разделе показано, как создать базовое консольное приложение Java.
+В этом разделе вы создадим базовое консольное приложение Java.
 
-1. Откройте интерфейс командной строки (CLI) в каталоге, в котором нужно создать проект. Выполните следующую команду, чтобы создать новый проект Gradle.
+1. Откройте интерфейс командной строки (CLI) в каталоге, где нужно создать проект. Чтобы создать новый проект Gradle, запустите следующую команду.
 
     ```Shell
     gradle init --dsl groovy --test-framework junit --type java-application --project-name graphtutorial --package graphtutorial
     ```
 
-1. После создания проекта убедитесь, что он работает, выполнив приведенную ниже команду, чтобы запустить приложение в утилите CLI.
+1. После создания проекта убедитесь, что он работает, выполив следующую команду для запуска приложения в CLI.
 
     ```Shell
     ./gradlew --console plain run
     ```
 
-    Если это сработает, приложение должно выводить `Hello World.`результаты.
+    Если он работает, приложение должно вы выходные `Hello World.` данные .
 
 ## <a name="install-dependencies"></a>Установка зависимостей
 
-Перед перемещением добавьте дополнительные зависимости, которые будут использоваться позже.
+Прежде чем двигаться дальше, добавьте некоторые дополнительные зависимости, которые вы будете использовать позже.
 
-- [Библиотека проверки подлинности Microsoft (MSAL) для Java](https://github.com/AzureAD/microsoft-authentication-library-for-java) для проверки подлинности пользователя и получения маркеров доступа.
-- [Пакет SDK Microsoft Graph для Java](https://github.com/microsoftgraph/msgraph-sdk-java) , чтобы совершать вызовы в Microsoft Graph.
-- [Привязка НОП SLF4J](https://mvnrepository.com/artifact/org.slf4j/slf4j-nop) для отмены ведения журнала из MSAL.
+- [Microsoft Authentication Library (MSAL) для Java](https://github.com/AzureAD/microsoft-authentication-library-for-java) для проверки подлинности пользователя и получения маркеров доступа.
+- [Microsoft Graph SDK для Java](https://github.com/microsoftgraph/msgraph-sdk-java) для вызова Microsoft Graph.
+- [Привязка SLF4J NOP для](https://mvnrepository.com/artifact/org.slf4j/slf4j-nop) подавления ведения журнала из MSAL.
 
-1. Открыть **./буилд.градле**. Обновите `dependencies` раздел, чтобы добавить эти зависимости.
+1. Откройте **./build.gradle.** `dependencies`Обновим раздел, чтобы добавить эти зависимости.
 
     :::code language="gradle" source="../demo/graphtutorial/build.gradle" id="DependenciesSnippet" highlight="7-9":::
 
-1. Добавьте следующий элемент в конец файла **./буилд.градле**.
+1. Добавьте следующее в конец **./build.gradle.**
 
     :::code language="gradle" source="../demo/graphtutorial/build.gradle" id="StandardInputSnippet":::
 
-В следующий раз при построении проекта Gradle загрузит эти зависимости.
+При следующей сборке проекта Gradle загрузит эти зависимости.
 
 ## <a name="design-the-app"></a>Проектирование приложения
 
-1. Откройте файл **./СРК/Маин/Жава/графтуториал/АПП.Жава** и замените его содержимое на приведенный ниже код.
+1. Откройте файл **./src/main/java/graphtutorial/App.java** и замените его содержимое следующим:
 
     ```java
     package graphtutorial;
@@ -69,14 +69,16 @@ ms.locfileid: "43612021"
                 System.out.println("Please choose one of the following options:");
                 System.out.println("0. Exit");
                 System.out.println("1. Display access token");
-                System.out.println("2. List calendar events");
+                System.out.println("2. View this week's calendar");
+                System.out.println("3. Add an event");
 
                 try {
                     choice = input.nextInt();
                 } catch (InputMismatchException ex) {
                     // Skip over non-integer input
-                    input.nextLine();
                 }
+
+                input.nextLine();
 
                 // Process user choice
                 switch(choice) {
@@ -90,6 +92,9 @@ ms.locfileid: "43612021"
                     case 2:
                         // List the calendar
                         break;
+                    case 3:
+                        // Create a new event
+                        break;
                     default:
                         System.out.println("Invalid choice");
                 }
@@ -100,4 +105,4 @@ ms.locfileid: "43612021"
     }
     ```
 
-    В результате будет реализовано базовое меню, в котором считывается выбор пользователя из командной строки.
+    При этом реализуется базовое меню и считыется выбор пользователя из командной строки.
