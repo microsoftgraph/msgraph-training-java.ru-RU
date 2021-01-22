@@ -1,10 +1,10 @@
 ---
-ms.openlocfilehash: c26e5b8ab0b7c5c62b926e3f5416b94e3f10b601
-ms.sourcegitcommit: eb935a250f8531b04a42710356072b80d46ee3a4
+ms.openlocfilehash: 16e96edc78ed2f6955bc14654edba1cb26323648
+ms.sourcegitcommit: 2c0e0d2d6de994022dfa0faa10131582fb10e9b1
 ms.translationtype: MT
 ms.contentlocale: ru-RU
-ms.lasthandoff: 12/11/2020
-ms.locfileid: "49661048"
+ms.lasthandoff: 01/21/2021
+ms.locfileid: "49919531"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
@@ -14,7 +14,7 @@ ms.locfileid: "49661048"
 
 Для работы microsoft Graph SDK для Java требуется реализация интерфейса для `IAuthenticationProvider` его `GraphServiceClient` объекта.
 
-1. Создайте файл **в каталоге ./graphtutorial/src/main/java/graphtutorial** с именем **SimpleAuthProvider.java** и добавьте следующий код.
+1. Создайте новый файл в **каталоге ./graphtutorial/src/main/java/graphtutorial** с именем **SimpleAuthProvider.java** и добавьте следующий код.
 
     :::code language="java" source="../demo/graphtutorial/src/main/java/graphtutorial/SimpleAuthProvider.java" id="AuthProviderSnippet":::
 
@@ -161,7 +161,7 @@ ms.locfileid: "49661048"
 1. Добавьте следующее сразу после `// List the calendar` комментария в `main` функции.
 
     ```java
-    listCalendarEvents(accessToken);
+    listCalendarEvents(accessToken, user.mailboxSettings.timeZone);
     ```
 
 1. Сохраните все изменения, создайте приложение и запустите его. Выберите параметр **"Список событий** календаря", чтобы увидеть список событий пользователя.
