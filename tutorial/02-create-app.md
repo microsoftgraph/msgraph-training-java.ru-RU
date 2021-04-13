@@ -1,16 +1,16 @@
 ---
-ms.openlocfilehash: 72936993d940cdfb86c864a6ffc543ed466127d1
-ms.sourcegitcommit: eb935a250f8531b04a42710356072b80d46ee3a4
+ms.openlocfilehash: b80de156a5ed1708ccafbaabf34b49b119f4099c
+ms.sourcegitcommit: 5c09eff01b265ddfcca9090c14dca80a95320edd
 ms.translationtype: MT
 ms.contentlocale: ru-RU
-ms.lasthandoff: 12/11/2020
-ms.locfileid: "49661083"
+ms.lasthandoff: 04/13/2021
+ms.locfileid: "51695802"
 ---
 <!-- markdownlint-disable MD002 MD041 -->
 
-В этом разделе вы создадим базовое консольное приложение Java.
+В этом разделе вы создадим базовое приложение для консоли Java.
 
-1. Откройте интерфейс командной строки (CLI) в каталоге, где нужно создать проект. Чтобы создать новый проект Gradle, запустите следующую команду.
+1. Откройте интерфейс командной строки (CLI) в каталоге, в котором необходимо создать проект. Запустите следующую команду, чтобы создать новый проект Gradle.
 
     ```Shell
     gradle init --dsl groovy --test-framework junit --type java-application --project-name graphtutorial --package graphtutorial
@@ -22,29 +22,28 @@ ms.locfileid: "49661083"
     ./gradlew --console plain run
     ```
 
-    Если он работает, приложение должно вы выходные `Hello World.` данные .
+    Если оно работает, приложение должно выводить `Hello World.` .
 
 ## <a name="install-dependencies"></a>Установка зависимостей
 
-Прежде чем двигаться дальше, добавьте некоторые дополнительные зависимости, которые вы будете использовать позже.
+Прежде чем двигаться дальше, добавьте дополнительные зависимости, которые вы будете использовать позже.
 
-- [Microsoft Authentication Library (MSAL) для Java](https://github.com/AzureAD/microsoft-authentication-library-for-java) для проверки подлинности пользователя и получения маркеров доступа.
-- [Microsoft Graph SDK для Java](https://github.com/microsoftgraph/msgraph-sdk-java) для вызова Microsoft Graph.
-- [Привязка SLF4J NOP для](https://mvnrepository.com/artifact/org.slf4j/slf4j-nop) подавления ведения журнала из MSAL.
+- [Клиентская библиотека Azure Identity для Java](https://github.com/Azure/azure-sdk-for-java/tree/master/sdk/identity/azure-identity) для проверки подлинности пользователя и получения маркеров доступа.
+- [Microsoft Graph SDK для Java](https://github.com/microsoftgraph/msgraph-sdk-java) для звонков в Microsoft Graph.
 
-1. Откройте **./build.gradle.** `dependencies`Обновим раздел, чтобы добавить эти зависимости.
+1. Откройте **./build.gradle**. `dependencies`Обнови раздел, чтобы добавить эти зависимости.
 
-    :::code language="gradle" source="../demo/graphtutorial/build.gradle" id="DependenciesSnippet" highlight="7-9":::
+    :::code language="gradle" source="../demo/graphtutorial/build.gradle" id="DependenciesSnippet" highlight="7-8":::
 
-1. Добавьте следующее в конец **./build.gradle.**
+1. Добавьте следующее в конец **./build.gradle**.
 
     :::code language="gradle" source="../demo/graphtutorial/build.gradle" id="StandardInputSnippet":::
 
-При следующей сборке проекта Gradle загрузит эти зависимости.
+При следующем создании проекта Gradle загрузит эти зависимости.
 
 ## <a name="design-the-app"></a>Проектирование приложения
 
-1. Откройте файл **./src/main/java/graphtutorial/App.java** и замените его содержимое следующим:
+1. Откройте **файл ./src/main/java/graphtutorial/App.java** и замените его содержимое следующим.
 
     ```java
     package graphtutorial;
@@ -105,4 +104,4 @@ ms.locfileid: "49661083"
     }
     ```
 
-    При этом реализуется базовое меню и считыется выбор пользователя из командной строки.
+    Это реализует основное меню и считыванию выбора пользователя из командной строки.
